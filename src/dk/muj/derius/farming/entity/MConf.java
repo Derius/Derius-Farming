@@ -56,13 +56,20 @@ public class MConf extends Entity<MConf>
 	// -------------------------------------------- //
 	// EXP GAIN
 	// -------------------------------------------- //
-	
-	// TODO: Change this map to farming related IDs!
+
 	/**
 	 * This Map stores, which blockId (first Integer) gives you how many exp (second Integer).
+	 * Melon stem = 104, pumpkin stem = 105
 	 */
 	public Map<Integer, Integer> expGain = MUtil.map(
-			17,	20,
-			162,	20
+			59,	20,	// Wheat Crops
+			81,	10,	// Cactus
+			83,	20,	// Sugar Cane
+			86,	40,	// Pumpkin
+			103,	40,	// Melon
+			115,	30, // Nether wart
+			127,	10,	// Cocoa Bean
+			141,	20,	// Carrots
+			142,	20	// Potatoes
 			);
 }

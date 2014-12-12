@@ -1,6 +1,6 @@
 name: Derius-Farming
 version: 0.1_dev
-main: dk.muj.derius.farming.DeriusFarming
+main: dk.muj.farming.DeriusFarming
 #website: http://muj.dk/Derius/Farming
 authors: [ulumulu1510]
 description: §eDerius farming
