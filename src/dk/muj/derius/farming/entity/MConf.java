@@ -2,6 +2,8 @@ package dk.muj.derius.farming.entity;
 
 import java.util.Map;
 
+import org.bukkit.Material;
+
 import com.massivecraft.massivecore.store.Entity;
 import com.massivecraft.massivecore.util.MUtil;
 
@@ -30,17 +32,17 @@ public class MConf extends Entity<MConf>
 	/**
 	 * The Id of the skill, there is only one of these in each skill.
 	 */
-	public int getSkillId = 30;
+	public String getSkillId = "Derius_Farming";
 	
 	/**
 	 * The Id of the double drop and replace Ability. Each ability has it's own Id
 	 */
-	public int getDoubleDropAndReplantId = 31;
+	public String getDoubleDropAndReplantId = "Derius_Farming_DoubleDropAndReplant";
 	
 	/**
 	 * The Id of the Tree harvest Ability. Each ability has it's own Id
 	 */
-	public int getFertilizeFieldId = 32;
+	public String getFertilizeFieldId = "Derius_Farming_FertilizeField";
 	
 
 	
@@ -58,18 +60,18 @@ public class MConf extends Entity<MConf>
 	// -------------------------------------------- //
 
 	/**
-	 * This Map stores, which blockId (first Integer) gives you how many exp (second Integer).
+	 * This Map stores, which Material gives you how many exp (second Integer).
 	 * Melon stem = 104, pumpkin stem = 105
 	 */
-	public Map<Integer, Integer> expGain = MUtil.map(
-			59,	20,	// Wheat Crops
-			81,	10,	// Cactus
-			83,	20,	// Sugar Cane
-			86,	40,	// Pumpkin
-			103,	40,	// Melon
-			115,	30, // Nether wart
-			127,	10,	// Cocoa Bean
-			141,	20,	// Carrots
-			142,	20	// Potatoes
+	public Map<Material, Integer> expGain = MUtil.map(
+			Material.WHEAT,	20,
+			Material.CACTUS,	10,
+			Material.SUGAR_CANE_BLOCK,	20,
+			Material.PUMPKIN,	40,
+			Material.MELON_BLOCK,	40,
+			Material.NETHER_WARTS,	30,
+			Material.COCOA,	10,
+			Material.CARROT,	20,
+			Material.POTATO,	20
 			);
 }

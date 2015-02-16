@@ -1,10 +1,9 @@
-package dk.muj.farming;
+package dk.muj.derius.farming;
 
-import dk.muj.derius.entity.MPlayer;
-import dk.muj.derius.skill.Skill;
+import dk.muj.derius.entity.DeriusSkill;
 import dk.muj.derius.farming.entity.MConf;
 
-public class FarmingSkill extends Skill
+public class FarmingSkill extends DeriusSkill
 {
 	
 	private static FarmingSkill i = new FarmingSkill();
@@ -17,9 +16,10 @@ public class FarmingSkill extends Skill
 	public FarmingSkill()
 	{
 		this.setName("Farming");
-		this.setDescription("Makes you better at farming.");
 		
-		this.addEarnExpDesc("Harvest crops and other vegetables!");
+		this.setDesc("Makes you better at farming.");
+		
+		this.addEarnExpDescs("Harvest crops and other vegetables!");
 	}
 	
 	// -------------------------------------------- //
@@ -27,14 +27,9 @@ public class FarmingSkill extends Skill
 	// -------------------------------------------- //
 	
 	@Override
-	public int getId()
+	public String getId()
 	{
 		return MConf.get().getSkillId;
 	}
 
-	@Override
-	public boolean CanPlayerLearnSkill(MPlayer p)
-	{
-		return true;
-	}
 }

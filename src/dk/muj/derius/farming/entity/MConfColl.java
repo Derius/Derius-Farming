@@ -4,8 +4,8 @@ import com.massivecraft.massivecore.MassiveCore;
 import com.massivecraft.massivecore.store.Coll;
 import com.massivecraft.massivecore.store.MStore;
 
-import dk.muj.farming.Const;
-import dk.muj.farming.DeriusFarming;
+import dk.muj.derius.farming.Const;
+import dk.muj.derius.farming.DeriusFarming;
 
 public class MConfColl extends Coll<MConf>
 {

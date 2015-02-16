@@ -1,16 +1,18 @@
-package dk.muj.farming;
+package dk.muj.derius.farming;
 
 import org.bukkit.Material;
 
 import com.massivecraft.massivecore.util.Txt;
 
-import dk.muj.derius.ability.Ability;
-import dk.muj.derius.ability.AbilityType;
+import dk.muj.derius.api.Ability;
+import dk.muj.derius.api.DPlayer;
+import dk.muj.derius.api.Skill;
+import dk.muj.derius.entity.DeriusAbility;
 import dk.muj.derius.entity.MPlayer;
 import dk.muj.derius.farming.entity.MConf;
-import dk.muj.derius.skill.Skill;
+import dk.muj.derius.req.ReqIsAtleastLevel;
 
-public class FertilizeField extends Ability
+public class FertilizeField extends DeriusAbility implements Ability
 {
 	private static FertilizeField i = new FertilizeField();
 	public static FertilizeField get() { return i; }
@@ -22,7 +24,7 @@ public class FertilizeField extends Ability
 	public FertilizeField()
 	{
 		this.setName("Fertilize Field");
-		this.setDescription("Fertilizes a field");
+		this.setDesc("Fertilizes a field");
 		this.setType(AbilityType.ACTIVE);
 		
 		this.addInteractKeys(
@@ -32,6 +34,8 @@ public class FertilizeField extends Ability
 				Material.GOLD_HOE,
 				Material.DIAMOND_HOE
 				);
+		
+		this.addActivateRequirements(ReqIsAtleastLevel.get(MConf.get().getFertilizeFieldMinLvl));
 	}
 	
 	// -------------------------------------------- //
@@ -39,7 +43,7 @@ public class FertilizeField extends Ability
 	// -------------------------------------------- //
 	
 	@Override
-	public int getId()
+	public String getId()
 	{
 		return MConf.get().getFertilizeFieldId;
 	}
@@ -55,27 +59,16 @@ public class FertilizeField extends Ability
 	// -------------------------------------------- //
 
 	@Override
-	public void onActivate(MPlayer p, Object other)
+	public Object onActivate(DPlayer p, Object other)
 	{
 		// TODO: Add fertilization skill by radius
+		return null;
 	}
 	
 	@Override
-	public void onDeactivate(MPlayer p)
+	public void onDeactivate(DPlayer p, Object other)
 	{
 		// Nothing at the moment.
-	}
-
-	// -------------------------------------------- //
-	// ABILITY ACTIVATION
-	// -------------------------------------------- //
-	
-	@Override
-	public boolean CanPlayerActivateAbility(MPlayer p)
-	{
-		if(p.getLvl(FarmingSkill.get()) >= MConf.get().getFertilizeFieldMinLvl)
-			return true;
-		return false;
 	}
 	
 	// -------------------------------------------- //
@@ -84,7 +77,7 @@ public class FertilizeField extends Ability
 	
 	// TODO: Add in actual radius method
 	@Override
-	public String getLvlDescription(int lvl)
+	public String getLvlDescriptionMsg(int lvl)
 	{
 		int radius = 1;
 		return Txt.parse("Fertilizes a field with the radius %s", radius);

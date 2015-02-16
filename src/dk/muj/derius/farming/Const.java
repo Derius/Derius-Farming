@@ -1,4 +1,4 @@
-package dk.muj.farming;
+package dk.muj.derius.farming;
 
 public class Const
 {

@@ -1,4 +1,4 @@
-package dk.muj.farming;
+package dk.muj.derius.farming;
 
 import com.massivecraft.massivecore.MassivePlugin;
 
