@@ -2,15 +2,16 @@ package dk.muj.derius.farming;
 
 import org.bukkit.Material;
 
+import com.massivecraft.massivecore.collections.WorldExceptionSet;
 import com.massivecraft.massivecore.util.Txt;
 
 import dk.muj.derius.api.Ability;
 import dk.muj.derius.api.DPlayer;
 import dk.muj.derius.api.Skill;
-import dk.muj.derius.entity.DeriusAbility;
-import dk.muj.derius.entity.MPlayer;
+import dk.muj.derius.entity.ability.DeriusAbility;
 import dk.muj.derius.farming.entity.MConf;
 import dk.muj.derius.req.ReqIsAtleastLevel;
+import dk.muj.derius.util.Listener;
 
 public class FertilizeField extends DeriusAbility implements Ability
 {
@@ -27,13 +28,12 @@ public class FertilizeField extends DeriusAbility implements Ability
 		this.setDesc("Fertilizes a field");
 		this.setType(AbilityType.ACTIVE);
 		
-		this.addInteractKeys(
+		Listener.registerBlockBreakKey(FarmingListener.get(),
 				Material.WOOD_HOE,
 				Material.STONE_HOE,
 				Material.IRON_HOE,
 				Material.GOLD_HOE,
-				Material.DIAMOND_HOE
-				);
+				Material.DIAMOND_HOE);
 		
 		this.addActivateRequirements(ReqIsAtleastLevel.get(MConf.get().getFertilizeFieldMinLvl));
 	}
@@ -81,5 +81,12 @@ public class FertilizeField extends DeriusAbility implements Ability
 	{
 		int radius = 1;
 		return Txt.parse("Fertilizes a field with the radius %s", radius);
+	}
+
+	@Override
+	public void setWorldsEarn(WorldExceptionSet worldsUse)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }

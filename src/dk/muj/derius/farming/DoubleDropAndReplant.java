@@ -12,13 +12,16 @@ import org.bukkit.block.BlockState;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
+import com.massivecraft.massivecore.collections.WorldExceptionSet;
+
+import dk.muj.derius.api.Ability;
 import dk.muj.derius.api.DPlayer;
 import dk.muj.derius.api.Skill;
-import dk.muj.derius.entity.DeriusAbility;
+import dk.muj.derius.entity.ability.DeriusAbility;
 import dk.muj.derius.farming.entity.MConf;
 import dk.muj.derius.util.SkillUtil;
 
-public class DoubleDropAndReplant extends DeriusAbility
+public class DoubleDropAndReplant extends DeriusAbility implements Ability
 {
 	private static DoubleDropAndReplant i = new DoubleDropAndReplant();
 	public static DoubleDropAndReplant get() { return i; }
@@ -164,6 +167,13 @@ public class DoubleDropAndReplant extends DeriusAbility
 				return true;
 		
 		return false;
+	}
+
+	@Override
+	public void setWorldsEarn(WorldExceptionSet worldsUse)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -28,8 +28,6 @@ public class DeriusFarming extends MassivePlugin
 		FarmingSkill.get().register();
 		FertilizeField.get().register();
 		DoubleDropAndReplant.get().register();
-	
-		MConfColl.get().get("Farming", true);
 		
 		super.postEnable();
 	}

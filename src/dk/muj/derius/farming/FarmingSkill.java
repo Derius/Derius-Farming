@@ -1,9 +1,16 @@
 package dk.muj.derius.farming;
 
-import dk.muj.derius.entity.DeriusSkill;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.bukkit.Material;
+
+import dk.muj.derius.api.Ability;
+import dk.muj.derius.api.Skill;
+import dk.muj.derius.entity.skill.DeriusSkill;
 import dk.muj.derius.farming.entity.MConf;
 
-public class FarmingSkill extends DeriusSkill
+public class FarmingSkill extends DeriusSkill implements Skill
 {
 	
 	private static FarmingSkill i = new FarmingSkill();
@@ -20,6 +27,8 @@ public class FarmingSkill extends DeriusSkill
 		this.setDesc("Makes you better at farming.");
 		
 		this.addEarnExpDescs("Harvest crops and other vegetables!");
+		
+		this.setIcon(Material.WHEAT);
 	}
 	
 	// -------------------------------------------- //
@@ -30,6 +39,26 @@ public class FarmingSkill extends DeriusSkill
 	public String getId()
 	{
 		return MConf.get().getSkillId;
+	}
+
+	@Override
+	public List<Ability> getActiveAbilities()
+	{
+		List<Ability> activeAbilities = new ArrayList<Ability>();
+		
+		activeAbilities.add(FertilizeField.get());
+		
+		return activeAbilities;
+	}
+
+	@Override
+	public List<Ability> getPassiveAbilities()
+	{
+		List<Ability> passiveAbilities = new ArrayList<Ability>();
+		
+		passiveAbilities.add(DoubleDropAndReplant.get());
+		
+		return passiveAbilities;
 	}
 
 }

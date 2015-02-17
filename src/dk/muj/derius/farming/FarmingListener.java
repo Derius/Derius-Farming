@@ -1,10 +1,9 @@
 package dk.muj.derius.farming;
 
 import org.bukkit.block.BlockState;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
-import dk.muj.derius.entity.MPlayer;
+import dk.muj.derius.api.DPlayer;
+import dk.muj.derius.util.AbilityUtil;
 import dk.muj.derius.util.Listener;
 
 public class FarmingListener implements Listener
@@ -21,12 +20,8 @@ public class FarmingListener implements Listener
 	// -------------------------------------------- //
 	
 	@Override
-	public void onBlockBreak(MPlayer mplayer, BlockState block)
-	{
-		if ( ! mplayer.isPlayer()) return;
-		Player player = mplayer.getPlayer();
-		ItemStack inHand = player.getItemInHand();
-		
-		mplayer.activateAbility(DoubleDropAndReplant.get(), block);
+	public void onBlockBreak(DPlayer dplayer, BlockState blockState)
+	{	
+		AbilityUtil.activateAbility(dplayer, DoubleDropAndReplant.get(), blockState, true);
 	}
 }
