@@ -25,6 +25,8 @@ public class FarmingSkill extends DeriusSkill implements Skill
 		this.addEarnExpDescs("Harvest crops and other vegetables!");
 		
 		this.setIcon(Material.WHEAT);
+		
+		// Implement config here
 	}
 	
 	// -------------------------------------------- //
