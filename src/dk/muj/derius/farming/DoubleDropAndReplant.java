@@ -12,8 +12,6 @@ import org.bukkit.block.BlockState;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
-import com.massivecraft.massivecore.collections.WorldExceptionSet;
-
 import dk.muj.derius.api.Ability;
 import dk.muj.derius.api.DPlayer;
 import dk.muj.derius.api.Skill;
@@ -167,13 +165,6 @@ public class DoubleDropAndReplant extends DeriusAbility implements Ability
 				return true;
 		
 		return false;
-	}
-
-	@Override
-	public void setWorldsEarn(WorldExceptionSet worldsUse)
-	{
-		// TODO Auto-generated method stub
-		
 	}
 
 }

@@ -2,7 +2,6 @@ package dk.muj.derius.farming;
 
 import org.bukkit.Material;
 
-import com.massivecraft.massivecore.collections.WorldExceptionSet;
 import com.massivecraft.massivecore.util.Txt;
 
 import dk.muj.derius.api.Ability;
@@ -83,10 +82,4 @@ public class FertilizeField extends DeriusAbility implements Ability
 		return Txt.parse("Fertilizes a field with the radius %s", radius);
 	}
 
-	@Override
-	public void setWorldsEarn(WorldExceptionSet worldsUse)
-	{
-		// TODO Auto-generated method stub
-		
-	}
 }
