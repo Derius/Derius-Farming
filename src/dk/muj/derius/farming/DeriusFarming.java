@@ -2,8 +2,6 @@ package dk.muj.derius.farming;
 
 import com.massivecraft.massivecore.MassivePlugin;
 
-import dk.muj.derius.farming.entity.MConfColl;
-
 public class DeriusFarming extends MassivePlugin
 {
 	// -------------------------------------------- //
@@ -21,13 +19,13 @@ public class DeriusFarming extends MassivePlugin
 	@Override
 	public void onEnable()
 	{
-		super.preEnable();
-	
-		MConfColl.get().init();
+		if ( ! super.preEnable()) return;
 			
 		FarmingSkill.get().register();
 		FertilizeField.get().register();
 		DoubleDropAndReplant.get().register();
+		
+		FarmingListener.get();
 		
 		super.postEnable();
 	}

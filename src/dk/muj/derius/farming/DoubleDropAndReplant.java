@@ -2,21 +2,18 @@ package dk.muj.derius.farming;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
 import dk.muj.derius.api.Ability;
 import dk.muj.derius.api.DPlayer;
 import dk.muj.derius.api.Skill;
 import dk.muj.derius.entity.ability.DeriusAbility;
-import dk.muj.derius.farming.entity.MConf;
 import dk.muj.derius.util.SkillUtil;
 
 public class DoubleDropAndReplant extends DeriusAbility implements Ability
@@ -32,7 +29,7 @@ public class DoubleDropAndReplant extends DeriusAbility implements Ability
 	{
 		this.setName("Doubledrop and replace");
 		
-		this.setDesc("gives doubledrop and sometimes replants it");
+		this.setDesc("gives doubledrop and sometimes replants the crop");
 		
 		this.setType(AbilityType.PASSIVE);
 	}
@@ -44,7 +41,7 @@ public class DoubleDropAndReplant extends DeriusAbility implements Ability
 	@Override
 	public String getId()
 	{
-		return MConf.get().getDoubleDropAndReplantId;
+		return "derius:farming:doubledropandreplant";
 	}
 	
 	@Override
@@ -59,37 +56,30 @@ public class DoubleDropAndReplant extends DeriusAbility implements Ability
 
 	
 	@Override
-	public Optional<Object> onActivate(DPlayer dplayer, Object blockState)
+	public Object onActivate(DPlayer dplayer, Object other)
 	{
-		if( ! (blockState instanceof BlockState))
-			return Optional.empty();
+		if( ! (other instanceof BlockState)) return null;
 		
-		BlockState b = (BlockState) blockState;
+		BlockState blockState = (BlockState) other;
 		
-		@SuppressWarnings("deprecation")
-		int cropId = b.getTypeId();
-		Material material = b.getType();
-		ItemStack inHand = dplayer.getPlayer().getItemInHand();
-		Location loc = b.getLocation();
-		
-		if(inHand.getItemMeta().hasEnchant(Enchantment.SILK_TOUCH))
-			return Optional.empty();
+		Material material = blockState.getType();
 			
 		// Check if it is a pumpkin or melon and make sure they don't abuse it.
-		if (isBlockFruitAbused(cropId, loc))
-			return Optional.empty();
+		if ( ! isBlockFruitsave(material, blockState)) return null;
 
+		// Should doubledrop occur?
+		if( ! (FarmingSkill.getExpGain().containsKey(material) && SkillUtil.shouldDoubleDropOccur(dplayer.getLvl(getSkill()), 10))) return null;
 		
-		if(MConf.get().expGain.containsKey(material) && SkillUtil.shouldDoubleDropOccur(dplayer.getLvl(getSkill()), 10))
+		ItemStack inHand = dplayer.getPlayer().getItemInHand();
+		Location loc = blockState.getLocation();
+		
+		for(ItemStack is: blockState.getBlock().getDrops(inHand))
 		{
-			for(ItemStack is: b.getBlock().getDrops(inHand))
-			{
-				b.getWorld().dropItem(loc, is);
-				this.replantSeed(10, loc);
-			}
+			blockState.getWorld().dropItem(loc, is);
+			this.replantSeed(10, loc);
 		}
 	
-		return Optional.empty();
+		return null;
 		
 	}
 	
@@ -103,8 +93,7 @@ public class DoubleDropAndReplant extends DeriusAbility implements Ability
 	@Override
 	public void onDeactivate(DPlayer dplayer, Object other)
 	{
-		// TODO Auto-generated method stub
-		
+		// Nothing to do here
 	}
 
 	// -------------------------------------------- //
@@ -121,26 +110,35 @@ public class DoubleDropAndReplant extends DeriusAbility implements Ability
 	// REDUCE ABUSE
 	// -------------------------------------------- //
 
-	private boolean isBlockFruitAbused(int Id, Location loc)
+	// Only here for first time activation, afterwards the BlockMixin takes its place
+	private boolean isBlockFruitsave(Material material, BlockState blockState)
 	{
-		int stemId;
+		// Is it a Material we want to check for?
+		Material stemMaterial = null;
 		
-		if (Id == 86 || Id == 103)
+		if (material == Material.PUMPKIN)
 		{
-			if (Id == 86)
-			{
-				stemId = 105;
-			}
-			else
-			{
-				stemId = 104;
-			}
-			
-			if (isNextToStem(stemId, loc))
-			{
-				return false;
-			}
-			else
+			stemMaterial = Material.PUMPKIN_STEM;
+		}
+		else if (material == Material.MELON)
+		{
+			stemMaterial = Material.MELON_STEM;
+		}
+		
+		// No? return true
+		if (stemMaterial == null) return true;
+		
+		// Check for the neighbors
+		List<Block> checkFor = new ArrayList<Block>();
+		
+		checkFor.add(blockState.getBlock().getRelative(BlockFace.EAST));
+		checkFor.add(blockState.getBlock().getRelative(BlockFace.NORTH));
+		checkFor.add(blockState.getBlock().getRelative(BlockFace.WEST));
+		checkFor.add(blockState.getBlock().getRelative(BlockFace.SOUTH));
+		
+		for (Block block: checkFor)
+		{
+			if (block.getType() == stemMaterial)
 			{
 				return true;
 			}
@@ -149,22 +147,5 @@ public class DoubleDropAndReplant extends DeriusAbility implements Ability
 		return false;
 	}
 	
-	@SuppressWarnings("deprecation")
-	private boolean isNextToStem(int stemId, Location loc)
-	{
-		Block b = loc.getBlock();
-		List<Block> checkFor = new ArrayList<Block>();
-		
-		checkFor.add(b.getRelative(BlockFace.EAST));
-		checkFor.add(b.getRelative(BlockFace.NORTH));
-		checkFor.add(b.getRelative(BlockFace.WEST));
-		checkFor.add(b.getRelative(BlockFace.SOUTH));
-		
-		for (Block block: checkFor)
-			if (block.getTypeId() == stemId)
-				return true;
-		
-		return false;
-	}
 
 }
