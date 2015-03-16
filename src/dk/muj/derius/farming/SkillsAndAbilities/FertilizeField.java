@@ -1,14 +1,15 @@
-package dk.muj.derius.farming;
+package dk.muj.derius.farming.SkillsAndAbilities;
+
+import java.util.Optional;
 
 import com.massivecraft.massivecore.util.Txt;
 
-import dk.muj.derius.api.Ability;
-import dk.muj.derius.api.DPlayer;
-import dk.muj.derius.api.Skill;
-import dk.muj.derius.entity.ability.DeriusAbility;
-import dk.muj.derius.req.ReqIsAtleastLevel;
+import dk.muj.derius.api.ability.AbilityAbstract;
+import dk.muj.derius.api.player.DPlayer;
+import dk.muj.derius.api.req.ReqIsAtleastLevel;
+import dk.muj.derius.api.skill.Skill;
 
-public class FertilizeField extends DeriusAbility implements Ability
+public class FertilizeField extends AbilityAbstract
 {
 	private static FertilizeField i = new FertilizeField();
 	public static FertilizeField get() { return i; }
@@ -25,7 +26,7 @@ public class FertilizeField extends DeriusAbility implements Ability
 		
 		this.setType(AbilityType.ACTIVE);
 		
-		this.addActivateRequirements(ReqIsAtleastLevel.get(FarmingSkill.getFertilizeFieldMinLvl()));
+		this.addActivateRequirements(ReqIsAtleastLevel.get( () -> FarmingSkill.getFertilizeFieldMinLvl() ));
 	}
 	
 	// -------------------------------------------- //
@@ -67,10 +68,10 @@ public class FertilizeField extends DeriusAbility implements Ability
 	
 	// TODO: Add in actual radius method
 	@Override
-	public String getLvlDescriptionMsg(int lvl)
+	public Optional<String> getLvlDescriptionMsg(int lvl)
 	{
 		int radius = 1;
-		return Txt.parse("Fertilizes a field with the radius %s", radius);
+		return Optional.of(Txt.parse("Fertilizes a field with the radius %s", radius));
 	}
 
 }

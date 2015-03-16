@@ -1,7 +1,8 @@
-package dk.muj.derius.farming;
+package dk.muj.derius.farming.SkillsAndAbilities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -10,13 +11,12 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.inventory.ItemStack;
 
-import dk.muj.derius.api.Ability;
-import dk.muj.derius.api.DPlayer;
-import dk.muj.derius.api.Skill;
-import dk.muj.derius.entity.ability.DeriusAbility;
-import dk.muj.derius.util.SkillUtil;
+import dk.muj.derius.api.ability.AbilityAbstract;
+import dk.muj.derius.api.player.DPlayer;
+import dk.muj.derius.api.skill.Skill;
+import dk.muj.derius.api.util.SkillUtil;
 
-public class DoubleDropAndReplant extends DeriusAbility implements Ability
+public class DoubleDropAndReplant extends AbilityAbstract
 {
 	private static DoubleDropAndReplant i = new DoubleDropAndReplant();
 	public static DoubleDropAndReplant get() { return i; }
@@ -59,13 +59,14 @@ public class DoubleDropAndReplant extends DeriusAbility implements Ability
 	public Object onActivate(DPlayer dplayer, Object other)
 	{
 		if( ! (other instanceof BlockState)) return null;
-		
 		BlockState blockState = (BlockState) other;
 		
 		Material material = blockState.getType();
+		
+		if ( ! FarmingSkill.getExpGain().containsKey(material)) return null;
 			
 		// Check if it is a pumpkin or melon and make sure they don't abuse it.
-		if ( ! isBlockFruitsave(material, blockState)) return null;
+		if ( ! isBlockFruitSave(material, blockState)) return null;
 
 		// Should doubledrop occur?
 		if( ! (FarmingSkill.getExpGain().containsKey(material) && SkillUtil.shouldDoubleDropOccur(dplayer.getLvl(getSkill()), 10))) return null;
@@ -83,11 +84,9 @@ public class DoubleDropAndReplant extends DeriusAbility implements Ability
 		
 	}
 	
-	
-	// TODO: Add in later!
 	private void replantSeed (int chance, Location loc)
 	{
-		
+		// TODO: Add in later!
 	}
 	
 	@Override
@@ -101,9 +100,10 @@ public class DoubleDropAndReplant extends DeriusAbility implements Ability
 	// -------------------------------------------- //
 	
 	@Override
-	public String getLvlDescriptionMsg(int lvl)
+	public Optional<String> getLvlDescriptionMsg(int lvl)
 	{
-		return "chance to double drop and replant seed" + lvl/10.0 + "%";
+		double percent = Math.min(100.0, (double) lvl/10.0);
+		return Optional.of("<i>Chance to double drop and replant: <h>" + String.valueOf(percent) + "%");
 	}
 	
 	// -------------------------------------------- //
@@ -111,7 +111,7 @@ public class DoubleDropAndReplant extends DeriusAbility implements Ability
 	// -------------------------------------------- //
 
 	// Only here for first time activation, afterwards the BlockMixin takes its place
-	private boolean isBlockFruitsave(Material material, BlockState blockState)
+	private boolean isBlockFruitSave(Material material, BlockState blockState)
 	{
 		// Is it a Material we want to check for?
 		Material stemMaterial = null;

@@ -2,6 +2,12 @@ package dk.muj.derius.farming;
 
 import com.massivecraft.massivecore.MassivePlugin;
 
+import dk.muj.derius.api.DeriusAPI;
+import dk.muj.derius.farming.SkillsAndAbilities.CarefulHarvesting;
+import dk.muj.derius.farming.SkillsAndAbilities.DoubleDropAndReplant;
+import dk.muj.derius.farming.SkillsAndAbilities.FarmingSkill;
+import dk.muj.derius.farming.SkillsAndAbilities.FertilizeField;
+
 public class DeriusFarming extends MassivePlugin
 {
 	// -------------------------------------------- //
@@ -24,8 +30,13 @@ public class DeriusFarming extends MassivePlugin
 		FarmingSkill.get().register();
 		FertilizeField.get().register();
 		DoubleDropAndReplant.get().register();
+		CarefulHarvesting.get().register();
 		
-		FarmingListener.get();
+		EngineFarming.get().activate();
+		
+		DeriusAPI.registerPreparableTools(EngineFarming.HOE_MATERIALS);
+		DeriusAPI.addBlockTypesToListenFor(FarmingSkill.getExpGain().keySet());
+		DeriusAPI.registerExpGain(FarmingExpGain.get());
 		
 		super.postEnable();
 	}

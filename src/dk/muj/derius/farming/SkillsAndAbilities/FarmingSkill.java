@@ -1,16 +1,18 @@
-package dk.muj.derius.farming;
+package dk.muj.derius.farming.SkillsAndAbilities;
 
 import java.util.Map;
 
 import org.bukkit.Material;
+import org.bukkit.plugin.Plugin;
 
 import com.massivecraft.massivecore.util.MUtil;
 import com.massivecraft.massivecore.xlib.gson.reflect.TypeToken;
 
-import dk.muj.derius.api.Skill;
-import dk.muj.derius.entity.skill.DeriusSkill;
+import dk.muj.derius.api.skill.SkillAbstract;
+import dk.muj.derius.farming.Const;
+import dk.muj.derius.farming.DeriusFarming;
 
-public class FarmingSkill extends DeriusSkill implements Skill
+public class FarmingSkill extends SkillAbstract
 {
 	
 	private static FarmingSkill i = new FarmingSkill();
@@ -32,7 +34,7 @@ public class FarmingSkill extends DeriusSkill implements Skill
 		this.setIcon(Material.WHEAT);
 		
 		// Config
-		this.writeConfig("fertilizeFieldMinLvl", 500);
+		this.writeConfig(Const.JSON_FERTILIZE_FIELD_MIN_LVL, 500);
 		this.writeConfig(Const.JSON_EXP_GAIN, MUtil.map(
 				Material.WHEAT, 20,
 				Material.CACTUS, 10,
@@ -45,11 +47,22 @@ public class FarmingSkill extends DeriusSkill implements Skill
 				Material.POTATO, 20
 				), new TypeToken<Map<Material, Integer>>(){});
 		
+		this.writeConfig(Const.JSON_CAREFUL_HARVESTING, MUtil.map(
+				0, 0.5,
+				1000, 1.5,
+				2000, 3.0), new TypeToken<Map<Integer, Double>>(){});
+		
 	}
 	
 	// -------------------------------------------- //
 	// OVERRIDE
 	// -------------------------------------------- //
+	
+	@Override
+	public Plugin getPlugin()
+	{
+		return DeriusFarming.get();
+	}
 	
 	@Override
 	public String getId()
@@ -68,7 +81,12 @@ public class FarmingSkill extends DeriusSkill implements Skill
 	
 	public static int getFertilizeFieldMinLvl()
 	{
-		return get().readConfig("fertilizeFieldMinLvl", int.class);
+		return get().readConfig(Const.JSON_FERTILIZE_FIELD_MIN_LVL, Integer.class);
 	}
-	
+
+	public static Map<Integer, Double> getDurabilityMultiplier()
+	{
+		return get().readConfig(Const.JSON_CAREFUL_HARVESTING, new TypeToken<Map<Integer, Double>>(){});
+	}
+
 }
