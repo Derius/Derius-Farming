@@ -1,5 +1,6 @@
-package dk.muj.derius.farming.SkillsAndAbilities;
+package dk.muj.derius.farming;
 
+import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Material;
@@ -9,8 +10,6 @@ import com.massivecraft.massivecore.util.MUtil;
 import com.massivecraft.massivecore.xlib.gson.reflect.TypeToken;
 
 import dk.muj.derius.api.skill.SkillAbstract;
-import dk.muj.derius.farming.Const;
-import dk.muj.derius.farming.DeriusFarming;
 
 public class FarmingSkill extends SkillAbstract
 {
@@ -52,6 +51,14 @@ public class FarmingSkill extends SkillAbstract
 				1000, 1.5,
 				2000, 3.0), new TypeToken<Map<Integer, Double>>(){});
 		
+		this.writeConfig(Const.JSON_REPLANT_MATERIALS, MUtil.map(
+				Material.WHEAT,
+				Material.NETHER_WARTS,
+				Material.COCOA,
+				Material.CARROT,
+				Material.POTATO
+				), new TypeToken<List<Material>>(){});
+		
 	}
 	
 	// -------------------------------------------- //
@@ -87,6 +94,11 @@ public class FarmingSkill extends SkillAbstract
 	public static Map<Integer, Double> getDurabilityMultiplier()
 	{
 		return get().readConfig(Const.JSON_CAREFUL_HARVESTING, new TypeToken<Map<Integer, Double>>(){});
+	}
+	
+	public static List<Material> getReplantMaterials()
+	{
+		return get().readConfig(Const.JSON_REPLANT_MATERIALS, new TypeToken<List<Material>>(){});
 	}
 
 }

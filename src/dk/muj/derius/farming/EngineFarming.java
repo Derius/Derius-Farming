@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -17,10 +19,9 @@ import com.massivecraft.massivecore.EngineAbstract;
 import dk.muj.derius.api.DeriusAPI;
 import dk.muj.derius.api.VerboseLevel;
 import dk.muj.derius.api.player.DPlayer;
+import dk.muj.derius.api.skill.Skill;
 import dk.muj.derius.api.util.AbilityUtil;
-import dk.muj.derius.farming.SkillsAndAbilities.DoubleDropAndReplant;
-import dk.muj.derius.farming.SkillsAndAbilities.FarmingSkill;
-import dk.muj.derius.farming.SkillsAndAbilities.FertilizeField;
+import dk.muj.derius.api.util.SkillUtil;
 
 public class EngineFarming extends EngineAbstract
 {
@@ -68,7 +69,12 @@ public class EngineFarming extends EngineAbstract
 		DPlayer dplayer = DeriusAPI.getDPlayer(player);
 		Block block = event.getBlock();
 		Material material = block.getType();
+		List<Block> blocks = new ArrayList<Block>();
+		Skill skill = FarmingSkill.get();
 		
+		blocks.add(block);
+		
+		// Tool preparation and ability activition
 		Optional<Material> optPrepared = dplayer.getPreparedTool();
 		
 		if (optPrepared.isPresent() && HOE_MATERIALS.contains(optPrepared.get()))
@@ -79,16 +85,41 @@ public class EngineFarming extends EngineAbstract
 		// Special passive ability activation
 		if ( ! FarmingSkill.getExpGain().containsKey(material)) return;
 		
-		AbilityUtil.activateAbility(dplayer, DoubleDropAndReplant.get(), block.getState(), VerboseLevel.NEVER);
+		// Handle growth state
+		if ( ! isGrowthStateCorrect(block.getState())) return;
 		
-		// Special exp handling, cacti and sugarcanes
-		if ( ! (material == Material.SUGAR_CANE_BLOCK || material == Material.CACTUS)) return;
+		// Special exp and doubledrop handling, cacti and sugarcanes
+		if (material == Material.SUGAR_CANE_BLOCK || material == Material.CACTUS)
+		{
+			boolean hasLeft = true;
+			Block upperBlock = block;
+			
+			// Check for more blocks to add
+			while (hasLeft)
+			{
+				upperBlock = upperBlock.getRelative(BlockFace.UP);
+				
+				if (upperBlock.getType() != material) break;
+				
+				blocks.add(upperBlock);
+				
+				// Give exp immediately
+				if ( ! SkillUtil.canPlayerLearnSkill(dplayer, skill, VerboseLevel.HIGHEST)) continue;
+				dplayer.addExp(skill, FarmingSkill.getExpGain().get(material).longValue());
+			}
+		}
 		
-		handleSpecials(block);
+		for (Block activitionBlock : blocks)
+		{
+			AbilityUtil.activateAbility(dplayer, DoubleDropAndReplant.get(), activitionBlock.getState(), VerboseLevel.NEVER);
+		}
+		
+		return;
 	}
-	
-	private void handleSpecials(Block block)
+	private boolean isGrowthStateCorrect(BlockState state)
 	{
-		// To be added
+		// TODO Add in actual checking, it's complicated
+		return true;
 	}
+
 }

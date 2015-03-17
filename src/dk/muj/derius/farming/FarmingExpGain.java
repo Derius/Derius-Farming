@@ -7,7 +7,6 @@ import org.bukkit.Material;
 
 import dk.muj.derius.api.BlockBreakExpGain;
 import dk.muj.derius.api.skill.Skill;
-import dk.muj.derius.farming.SkillsAndAbilities.FarmingSkill;
 
 public class FarmingExpGain implements BlockBreakExpGain
 {

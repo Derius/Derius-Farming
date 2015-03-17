@@ -1,4 +1,4 @@
-package dk.muj.derius.farming.SkillsAndAbilities;
+package dk.muj.derius.farming;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,24 +69,20 @@ public class DoubleDropAndReplant extends AbilityAbstract
 		if ( ! isBlockFruitSave(material, blockState)) return null;
 
 		// Should doubledrop occur?
-		if( ! (FarmingSkill.getExpGain().containsKey(material) && SkillUtil.shouldDoubleDropOccur(dplayer.getLvl(getSkill()), 10))) return null;
+		if( ! SkillUtil.shouldDoubleDropOccur(dplayer.getLvl(getSkill()), 10)) return null;
 		
 		ItemStack inHand = dplayer.getPlayer().getItemInHand();
 		Location loc = blockState.getLocation();
 		
+		// Apply doubledrop and replant if possible
 		for(ItemStack is: blockState.getBlock().getDrops(inHand))
 		{
 			blockState.getWorld().dropItem(loc, is);
-			this.replantSeed(10, loc);
+			replantSeed(material, 10, blockState.getBlock());
 		}
 	
 		return null;
 		
-	}
-	
-	private void replantSeed (int chance, Location loc)
-	{
-		// TODO: Add in later!
 	}
 	
 	@Override
@@ -130,11 +126,12 @@ public class DoubleDropAndReplant extends AbilityAbstract
 		
 		// Check for the neighbors
 		List<Block> checkFor = new ArrayList<Block>();
+		Block stemBlock = blockState.getBlock();
 		
-		checkFor.add(blockState.getBlock().getRelative(BlockFace.EAST));
-		checkFor.add(blockState.getBlock().getRelative(BlockFace.NORTH));
-		checkFor.add(blockState.getBlock().getRelative(BlockFace.WEST));
-		checkFor.add(blockState.getBlock().getRelative(BlockFace.SOUTH));
+		checkFor.add(stemBlock.getRelative(BlockFace.EAST));
+		checkFor.add(stemBlock.getRelative(BlockFace.NORTH));
+		checkFor.add(stemBlock.getRelative(BlockFace.WEST));
+		checkFor.add(stemBlock.getRelative(BlockFace.SOUTH));
 		
 		for (Block block: checkFor)
 		{
@@ -145,6 +142,16 @@ public class DoubleDropAndReplant extends AbilityAbstract
 		}
 		
 		return false;
+	}
+	
+	// -------------------------------------------- //
+	// REPLANT SEED
+	// -------------------------------------------- //
+	
+	private void replantSeed (Material material, int chance, Block block)
+	{
+		// TODO: Add in later!
+		if ( ! FarmingSkill.getReplantMaterials().contains(material)) return;
 	}
 	
 

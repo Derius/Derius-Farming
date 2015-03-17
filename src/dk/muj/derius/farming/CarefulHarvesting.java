@@ -1,4 +1,4 @@
-package dk.muj.derius.farming.SkillsAndAbilities;
+package dk.muj.derius.farming;
 
 import java.util.Collection;
 import java.util.Map;
@@ -7,7 +7,6 @@ import org.bukkit.Material;
 
 import dk.muj.derius.api.ability.AbilityDurabilityMultiplier;
 import dk.muj.derius.api.skill.Skill;
-import dk.muj.derius.farming.EngineFarming;
 
 public class CarefulHarvesting extends AbilityDurabilityMultiplier
 {

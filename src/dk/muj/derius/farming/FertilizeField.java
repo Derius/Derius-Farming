@@ -1,4 +1,4 @@
-package dk.muj.derius.farming.SkillsAndAbilities;
+package dk.muj.derius.farming;
 
 import java.util.Optional;
 
