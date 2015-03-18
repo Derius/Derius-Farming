@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.bukkit.CropState;
 import org.bukkit.Material;
+import org.bukkit.NetherWartsState;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
@@ -12,6 +14,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.material.CocoaPlant;
+import org.bukkit.material.CocoaPlant.CocoaPlantSize;
+import org.bukkit.material.Crops;
+import org.bukkit.material.NetherWarts;
 import org.bukkit.plugin.Plugin;
 
 import com.massivecraft.massivecore.EngineAbstract;
@@ -85,8 +91,8 @@ public class EngineFarming extends EngineAbstract
 		// Special passive ability activation
 		if ( ! FarmingSkill.getExpGain().containsKey(material)) return;
 		
-		// Handle growth state
-		if ( ! isGrowthStateCorrect(block.getState())) return;
+		// Handle placement and growth state
+		if ( ! (DeriusAPI.isBlockPlacedByPlayer(block) && isGrowthStateCorrect(block.getState()))) return;
 		
 		// Special exp and doubledrop handling, cacti and sugarcanes
 		if (material == Material.SUGAR_CANE_BLOCK || material == Material.CACTUS)
@@ -100,6 +106,7 @@ public class EngineFarming extends EngineAbstract
 				upperBlock = upperBlock.getRelative(BlockFace.UP);
 				
 				if (upperBlock.getType() != material) break;
+				if (DeriusAPI.isBlockPlacedByPlayer(upperBlock)) continue;
 				
 				blocks.add(upperBlock);
 				
@@ -116,10 +123,29 @@ public class EngineFarming extends EngineAbstract
 		
 		return;
 	}
+	@SuppressWarnings("deprecation")
 	private boolean isGrowthStateCorrect(BlockState state)
 	{
-		// TODO Add in actual checking, it's complicated
-		return true;
+		 switch (state.getType())
+		 {
+			// These are the special cases to check for
+			case CARROT:
+			case POTATO:
+				return state.getRawData() == CropState.RIPE.getData();
+				 
+			case CROPS:
+				return ((Crops) state.getData()).getState() == CropState.RIPE;
+				 
+			case NETHER_WARTS:
+				return ((NetherWarts) state.getData()).getState() == NetherWartsState.RIPE;
+
+			case COCOA:
+				return ((CocoaPlant) state.getData()).getSize() == CocoaPlantSize.LARGE;
+				 
+			// Normally, it is true. The rest gets taken care of by the block placement storage
+			default:
+				return true;
+		 }
 	}
 
 }

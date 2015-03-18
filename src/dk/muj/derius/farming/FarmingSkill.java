@@ -34,16 +34,25 @@ public class FarmingSkill extends SkillAbstract
 		
 		// Config
 		this.writeConfig(Const.JSON_FERTILIZE_FIELD_MIN_LVL, 500);
+		this.writeConfig(Const.JSON_DOUBLE_DROP_LEVEL_PER_PERCENT, 20);
+		this.writeConfig(Const.JSON_REPLANT_LEVEL_PER_PERCENT, 50);
 		this.writeConfig(Const.JSON_EXP_GAIN, MUtil.map(
-				Material.WHEAT, 20,
+				Material.BROWN_MUSHROOM, 5,
 				Material.CACTUS, 10,
-				Material.SUGAR_CANE_BLOCK, 20,
+				Material.CARROT, 20,
+				Material.COCOA, 10,
+				Material.DOUBLE_PLANT, 2,
+				Material.LONG_GRASS, 1,
 				Material.PUMPKIN, 40,
 				Material.MELON_BLOCK, 40,
 				Material.NETHER_WARTS, 30,
-				Material.COCOA, 10,
-				Material.CARROT, 20,
-				Material.POTATO, 20
+				Material.POTATO, 20,
+				Material.RED_MUSHROOM, 2,
+				Material.RED_ROSE, 2,
+				Material.SUGAR_CANE_BLOCK, 20,
+				Material.WATER_LILY, 2,
+				Material.CROPS, 20,
+				Material.YELLOW_FLOWER, 2
 				), new TypeToken<Map<Material, Integer>>(){});
 		
 		this.writeConfig(Const.JSON_CAREFUL_HARVESTING, MUtil.map(
@@ -84,6 +93,15 @@ public class FarmingSkill extends SkillAbstract
 	public static Map<Material, Integer> getExpGain()
 	{
 		return get().readConfig(Const.JSON_EXP_GAIN, new TypeToken<Map<Material, Integer>>(){});
+	}
+	
+	public static int getDoubleDropLevelPerPercent()
+	{
+		return get().readConfig(Const.JSON_DOUBLE_DROP_LEVEL_PER_PERCENT, Integer.class);
+	}
+	public static int getReplantLevelPerPercent()
+	{
+		return get().readConfig(Const.JSON_REPLANT_LEVEL_PER_PERCENT, Integer.class);
 	}
 	
 	public static int getFertilizeFieldMinLvl()

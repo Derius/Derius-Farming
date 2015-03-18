@@ -15,5 +15,7 @@ public class Const
 	public static final String JSON_CAREFUL_HARVESTING = "Carefull Harvesting";
 	public static final String JSON_FERTILIZE_FIELD_MIN_LVL = "FertilizeField min level";
 	public static final String JSON_REPLANT_MATERIALS = "Replant Materials";
+	public static final String JSON_DOUBLE_DROP_LEVEL_PER_PERCENT = "Doubledrop level per percent";
+	public static final String JSON_REPLANT_LEVEL_PER_PERCENT = "Replant level per percent";
 	
 }

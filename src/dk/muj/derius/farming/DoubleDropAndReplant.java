@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.bukkit.CropState;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -78,7 +79,7 @@ public class DoubleDropAndReplant extends AbilityAbstract
 		for(ItemStack is: blockState.getBlock().getDrops(inHand))
 		{
 			blockState.getWorld().dropItem(loc, is);
-			replantSeed(material, 10, blockState.getBlock());
+			replantSeed(material, dplayer, blockState);
 		}
 	
 		return null;
@@ -98,8 +99,9 @@ public class DoubleDropAndReplant extends AbilityAbstract
 	@Override
 	public Optional<String> getLvlDescriptionMsg(int lvl)
 	{
-		double percent = Math.min(100.0, (double) lvl/10.0);
-		return Optional.of("<i>Chance to double drop and replant: <h>" + String.valueOf(percent) + "%");
+		double percentDrop = Math.min(100.0, (double) lvl / FarmingSkill.getDoubleDropLevelPerPercent());
+		double percentReplant = Math.min(100.0, (double) lvl / FarmingSkill.getReplantLevelPerPercent());
+		return Optional.of("<i>Chance to double drop is " + String.valueOf(percentDrop) + "%" + "and replant <h>" );
 	}
 	
 	// -------------------------------------------- //
@@ -148,10 +150,27 @@ public class DoubleDropAndReplant extends AbilityAbstract
 	// REPLANT SEED
 	// -------------------------------------------- //
 	
-	private void replantSeed (Material material, int chance, Block block)
+	private void replantSeed (Material material, DPlayer dplayer, BlockState blockState)
 	{
-		// TODO: Add in later!
 		if ( ! FarmingSkill.getReplantMaterials().contains(material)) return;
+		if ( ! SkillUtil.shouldDoubleDropOccur(dplayer.getLvl(getSkill()), FarmingSkill.getReplantLevelPerPercent())) return;
+		
+		Block block = blockState.getBlock();
+		switch (material)
+		{
+			case CARROT:
+			case CROPS:
+			case POTATO:
+				block.setData(CropState.SEEDED.getData());
+				break;
+			
+			case NETHER_WARTS:
+				block.setData((byte) 0);
+				break;
+				
+			default:
+				break;
+		}
 	}
 	
 
