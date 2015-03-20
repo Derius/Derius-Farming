@@ -55,4 +55,5 @@ public class CarefulHarvesting extends AbilityDurabilityMultiplier
 	{
 		return "Hoe";
 	}
+	
 }

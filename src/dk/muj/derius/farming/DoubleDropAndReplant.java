@@ -30,7 +30,7 @@ public class DoubleDropAndReplant extends AbilityAbstract
 	{
 		this.setName("Doubledrop and replace");
 		
-		this.setDesc("gives doubledrop and sometimes replants the crop");
+		this.setDesc("Gives doubledrop and sometimes replants the crop");
 		
 		this.setType(AbilityType.PASSIVE);
 	}
@@ -101,7 +101,7 @@ public class DoubleDropAndReplant extends AbilityAbstract
 	{
 		double percentDrop = Math.min(100.0, (double) lvl / FarmingSkill.getDoubleDropLevelPerPercent());
 		double percentReplant = Math.min(100.0, (double) lvl / FarmingSkill.getReplantLevelPerPercent());
-		return Optional.of("<i>Chance to double drop is " + String.valueOf(percentDrop) + "%" + "and replant <h>" );
+		return Optional.of("<i>Chance to double drop is " + String.valueOf(percentDrop) + "%" + "and replant <h>" + String.valueOf(percentReplant) );
 	}
 	
 	// -------------------------------------------- //
@@ -150,6 +150,7 @@ public class DoubleDropAndReplant extends AbilityAbstract
 	// REPLANT SEED
 	// -------------------------------------------- //
 	
+	@SuppressWarnings("deprecation")
 	private void replantSeed (Material material, DPlayer dplayer, BlockState blockState)
 	{
 		if ( ! FarmingSkill.getReplantMaterials().contains(material)) return;
@@ -163,12 +164,9 @@ public class DoubleDropAndReplant extends AbilityAbstract
 			case POTATO:
 				block.setData(CropState.SEEDED.getData());
 				break;
-			
-			case NETHER_WARTS:
-				block.setData((byte) 0);
-				break;
 				
 			default:
+				block.setData((byte) 0);
 				break;
 		}
 	}

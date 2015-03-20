@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.material.CocoaPlant;
 import org.bukkit.material.CocoaPlant.CocoaPlantSize;
 import org.bukkit.material.Crops;
@@ -69,7 +70,7 @@ public class EngineFarming extends EngineAbstract
 	// -------------------------------------------- //
 	
 	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
-	public void onBlockBreak(BlockBreakEvent event)
+	public void ExpAndPassiveAbilityActivation(BlockBreakEvent event)
 	{	
 		Player player = event.getPlayer();
 		DPlayer dplayer = DeriusAPI.getDPlayer(player);
@@ -78,23 +79,16 @@ public class EngineFarming extends EngineAbstract
 		List<Block> blocks = new ArrayList<Block>();
 		Skill skill = FarmingSkill.get();
 		
-		blocks.add(block);
-		
-		// Tool preparation and ability activition
-		Optional<Material> optPrepared = dplayer.getPreparedTool();
-		
-		if (optPrepared.isPresent() && HOE_MATERIALS.contains(optPrepared.get()))
-		{
-			AbilityUtil.activateAbility(dplayer, FertilizeField.get(), block, VerboseLevel.NORMAL);
-		}
-		
-		// Special passive ability activation
+		// Is the block supposed to get exp and doubledrop?
 		if ( ! FarmingSkill.getExpGain().containsKey(material)) return;
 		
 		// Handle placement and growth state
 		if ( ! (DeriusAPI.isBlockPlacedByPlayer(block) && isGrowthStateCorrect(block.getState()))) return;
 		
-		// Special exp and doubledrop handling, cacti and sugarcanes
+		// Add initial block
+		blocks.add(block);
+		
+		// Special exp and doubledrop handling for cacti and sugar canes
 		if (material == Material.SUGAR_CANE_BLOCK || material == Material.CACTUS)
 		{
 			boolean hasLeft = true;
@@ -116,6 +110,7 @@ public class EngineFarming extends EngineAbstract
 			}
 		}
 		
+		// Execute the ability for all blocks
 		for (Block activitionBlock : blocks)
 		{
 			AbilityUtil.activateAbility(dplayer, DoubleDropAndReplant.get(), activitionBlock.getState(), VerboseLevel.NEVER);
@@ -123,6 +118,31 @@ public class EngineFarming extends EngineAbstract
 		
 		return;
 	}
+	
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	public void ActiveAbilityActivition(PlayerInteractEvent event)
+	{
+		// Fields
+		Player player = event.getPlayer();
+		DPlayer dplayer = DeriusAPI.getDPlayer(player);
+		Block block = event.getClickedBlock();
+		
+		// Is field block?
+		if ( ! FarmingSkill.getFertilizeFieldMaterials().contains(block.getType())) return;
+		
+		// Tool preparation and ability activation
+		Optional<Material> optPrepared = dplayer.getPreparedTool();
+		
+		if (optPrepared.isPresent() && HOE_MATERIALS.contains(optPrepared.get()))
+		{
+			AbilityUtil.activateAbility(dplayer, FertilizeField.get(), block, VerboseLevel.NORMAL);
+		}
+	}
+	
+	// -------------------------------------------- //
+	// PRIVATE
+	// -------------------------------------------- //
+	
 	@SuppressWarnings("deprecation")
 	private boolean isGrowthStateCorrect(BlockState state)
 	{

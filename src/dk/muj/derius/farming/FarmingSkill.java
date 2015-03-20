@@ -34,6 +34,9 @@ public class FarmingSkill extends SkillAbstract
 		
 		// Config
 		this.writeConfig(Const.JSON_FERTILIZE_FIELD_MIN_LVL, 500);
+		this.writeConfig(Const.JSON_FERTILIZE_FIELD_RADIUS_STEP_PER_LEVELS, 25);
+		this.writeConfig(Const.JSON_FERTILIZE_FIELD_BASE_RADIUS, 2.0);
+		this.writeConfig(Const.JSON_FERTILIZE_FIELD_RADIUS_PER_STEP, 1.5);
 		this.writeConfig(Const.JSON_DOUBLE_DROP_LEVEL_PER_PERCENT, 20);
 		this.writeConfig(Const.JSON_REPLANT_LEVEL_PER_PERCENT, 50);
 		this.writeConfig(Const.JSON_EXP_GAIN, MUtil.map(
@@ -68,6 +71,13 @@ public class FarmingSkill extends SkillAbstract
 				Material.POTATO
 				), new TypeToken<List<Material>>(){});
 		
+		this.writeConfig(Const.JSON_FERTILIZE_FIELD_MATERIALS, MUtil.map(
+				Material.WHEAT,
+				Material.NETHER_WARTS,
+				Material.CARROT,
+				Material.POTATO
+				), new TypeToken<List<Material>>(){});
+		
 	}
 	
 	// -------------------------------------------- //
@@ -90,33 +100,59 @@ public class FarmingSkill extends SkillAbstract
 	// CONFIG GETTERS
 	// -------------------------------------------- //
 	
+	// Exp
 	public static Map<Material, Integer> getExpGain()
 	{
 		return get().readConfig(Const.JSON_EXP_GAIN, new TypeToken<Map<Material, Integer>>(){});
 	}
 	
+	// DoubleDropAndReplant
 	public static int getDoubleDropLevelPerPercent()
 	{
 		return get().readConfig(Const.JSON_DOUBLE_DROP_LEVEL_PER_PERCENT, Integer.class);
 	}
+	
 	public static int getReplantLevelPerPercent()
 	{
 		return get().readConfig(Const.JSON_REPLANT_LEVEL_PER_PERCENT, Integer.class);
-	}
-	
-	public static int getFertilizeFieldMinLvl()
-	{
-		return get().readConfig(Const.JSON_FERTILIZE_FIELD_MIN_LVL, Integer.class);
-	}
-
-	public static Map<Integer, Double> getDurabilityMultiplier()
-	{
-		return get().readConfig(Const.JSON_CAREFUL_HARVESTING, new TypeToken<Map<Integer, Double>>(){});
-	}
+	}	
 	
 	public static List<Material> getReplantMaterials()
 	{
 		return get().readConfig(Const.JSON_REPLANT_MATERIALS, new TypeToken<List<Material>>(){});
 	}
+	
+	// FertilizeField
+	public static int getFertilizeFieldMinLvl()
+	{
+		return get().readConfig(Const.JSON_FERTILIZE_FIELD_MIN_LVL, Integer.class);
+	}
+	
+	public static List<Material> getFertilizeFieldMaterials()
+	{
+		return get().readConfig(Const.JSON_FERTILIZE_FIELD_MATERIALS, new TypeToken<List<Material>>(){});
+	}
+
+	public static double getFertilizeFieldBaseRadius()
+	{
+		return get().readConfig(Const.JSON_FERTILIZE_FIELD_BASE_RADIUS, Double.class);
+	}
+
+	public static int getFertilizeFieldRadiusStepPerLevels()
+	{
+		return get().readConfig(Const.JSON_FERTILIZE_FIELD_RADIUS_STEP_PER_LEVELS, Integer.class);
+	}
+
+	public static double getFertilizeFieldRadiusPerStep()
+	{
+		return get().readConfig(Const.JSON_FERTILIZE_FIELD_RADIUS_PER_STEP, Double.class);
+	}
+	
+	// Durability Multiplier
+	public static Map<Integer, Double> getDurabilityMultiplier()
+	{
+		return get().readConfig(Const.JSON_CAREFUL_HARVESTING, new TypeToken<Map<Integer, Double>>(){});
+	}
+
 
 }
