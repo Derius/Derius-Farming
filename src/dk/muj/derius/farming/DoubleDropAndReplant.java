@@ -87,10 +87,7 @@ public class DoubleDropAndReplant extends AbilityAbstract
 	}
 	
 	@Override
-	public void onDeactivate(DPlayer dplayer, Object other)
-	{
-		// Nothing to do here
-	}
+	public void onDeactivate(DPlayer dplayer, Object other) { }
 
 	// -------------------------------------------- //
 	// Level description

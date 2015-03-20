@@ -37,6 +37,10 @@ public class FarmingSkill extends SkillAbstract
 		this.writeConfig(Const.JSON_FERTILIZE_FIELD_RADIUS_STEP_PER_LEVELS, 25);
 		this.writeConfig(Const.JSON_FERTILIZE_FIELD_BASE_RADIUS, 2.0);
 		this.writeConfig(Const.JSON_FERTILIZE_FIELD_RADIUS_PER_STEP, 1.5);
+		this.writeConfig(Const.JSON_FERTILIZE_FIELD_GROWTH_STEPS_PER_LEVEL, 1.5);
+		this.writeConfig(Const.JSON_FERTILIZE_FIELD_GROWTH_AMOUNT_PER_STEPS, 1.5);
+		this.writeConfig(Const.JSON_FERTILIZE_FIELD_GROWTH_MAX, 1.5);
+		
 		this.writeConfig(Const.JSON_DOUBLE_DROP_LEVEL_PER_PERCENT, 20);
 		this.writeConfig(Const.JSON_REPLANT_LEVEL_PER_PERCENT, 50);
 		this.writeConfig(Const.JSON_EXP_GAIN, MUtil.map(
@@ -148,11 +152,26 @@ public class FarmingSkill extends SkillAbstract
 		return get().readConfig(Const.JSON_FERTILIZE_FIELD_RADIUS_PER_STEP, Double.class);
 	}
 	
+	//  -- Field Growth
+	public static double getFertilizeFieldGrowthStepsPerLevels()
+	{
+		return get().readConfig(Const.JSON_FERTILIZE_FIELD_GROWTH_STEPS_PER_LEVEL, Double.class);
+	}
+	
+	public static double getFertilizeFieldGrowthAmountPerStep()
+	{
+		return get().readConfig(Const.JSON_FERTILIZE_FIELD_GROWTH_AMOUNT_PER_STEPS, Double.class);
+	}
+
+	public static byte getFertilizeFieldGrowthMax()
+	{
+		return get().readConfig(Const.JSON_FERTILIZE_FIELD_GROWTH_MAX, Byte.class);
+	}
+	
 	// Durability Multiplier
 	public static Map<Integer, Double> getDurabilityMultiplier()
 	{
 		return get().readConfig(Const.JSON_CAREFUL_HARVESTING, new TypeToken<Map<Integer, Double>>(){});
 	}
-
 
 }

@@ -6,12 +6,11 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang.mutable.MutableBoolean;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
-
-import com.massivecraft.massivecore.util.MUtil;
-import com.massivecraft.massivecore.util.Txt;
+import org.bukkit.material.CocoaPlant;
 
 import dk.muj.derius.api.ability.AbilityAbstract;
 import dk.muj.derius.api.player.DPlayer;
@@ -37,20 +36,8 @@ public class FertilizeField extends AbilityAbstract
 		
 		this.setType(AbilityType.ACTIVE);
 		
-		this.addActivateRequirements(ReqIsAtleastLevel.get( () -> FarmingSkill.getFertilizeFieldMinLvl() ));
+		this.addActivateRequirements(ReqIsAtleastLevel.get( () -> FarmingSkill.getFertilizeFieldMinLvl()));
 	}
-	
-	// -------------------------------------------- //
-	// STATIC
-	// -------------------------------------------- //
-
-	public final static Set<BlockFace> FIELD_FACES = MUtil.set(
-            BlockFace.UP,
-            BlockFace.EAST,
-            BlockFace.WEST,
-            BlockFace.NORTH,
-            BlockFace.SOUTH);
-	
 	
 	// -------------------------------------------- //
 	// SKILL & ID
@@ -75,8 +62,8 @@ public class FertilizeField extends AbilityAbstract
 	@Override
 	public Object onActivate(DPlayer dplayer, Object other)
 	{
+		if ( ! (other instanceof Block)) return null;
 		Block sourceBlock = (Block) other;
-		BlockState originalState = sourceBlock.getState();
 		
 		int level = dplayer.getLvl(FarmingSkill.get());
 		
@@ -90,14 +77,73 @@ public class FertilizeField extends AbilityAbstract
 		return null;
 	}
 	
-	private static void applyGrowth(Block block, int level)
+	@Override
+	public void onDeactivate(DPlayer dplayer, Object other) { }
+	
+	@SuppressWarnings("deprecation")
+	private void applyGrowth(Block block, int level)
 	{
-		// TODO implement method
+		byte data = block.getData();
+		
+		// If it is already fully grown, return.
+		if ( ! BlockUtil.isGrowthStateFull(block.getState())) return;
+		
+		// Do math to find out how much the field grows and limit it
+		double steps = level / FarmingSkill.getFertilizeFieldGrowthStepsPerLevels();
+		byte additionalData = (byte) (steps * Math.random() * FarmingSkill.getFertilizeFieldGrowthAmountPerStep());
+		additionalData = (byte) Math.min(additionalData, FarmingSkill.getFertilizeFieldGrowthMax());
+		
+		// Limit number to fully grown and set 
+		data = (byte) Math.min(data + additionalData, getDataOfFullyGrown(block));
+		block.setData(data);
+		
 		return;
 	}
-
-	@Override
-	public void onDeactivate(DPlayer p, Object other) { }
+	
+	private byte getDataOfFullyGrown(Block block)
+	{
+		// Every "crop" has it's own grown 
+		// Visit http://minecraft.gamepedia.com/Data_values for more information
+		Material mat = block.getType();
+		
+		if (mat == Material.CROPS || mat == Material.CARROT || mat == Material.POTATO)
+		{
+			return 7;
+		}
+		else if (mat == Material.NETHER_WARTS)
+		{
+			return 3;
+		}
+		else if (mat == Material.COCOA)
+		{
+			// Cocoa plants are the most weirdest plant to handle
+			byte data = 0;
+			CocoaPlant plant = (CocoaPlant) block.getState().getData();
+			BlockFace face = plant.getFacing();
+			
+			// The blockface it faces changes its byte value
+			if (face == BlockFace.EAST)
+			{
+				data += 1;
+			}
+			else if (face == BlockFace.SOUTH)
+			{
+				data += 2;
+			}
+			else if (face == BlockFace.WEST)
+			{
+				data += 3;
+			}
+			
+			// And the fully grown state should be 144. This adds up to the result.
+			return (byte) (data + 144);
+		}
+		else
+		{
+			// Defaulty, we just set it to seven. The probability of this being correct is really high.
+			return 7;
+		}
+	}
 	
 	// -------------------------------------------- //
 	// Level description
@@ -106,7 +152,7 @@ public class FertilizeField extends AbilityAbstract
 	@Override
 	public Optional<String> getLvlDescriptionMsg(int lvl)
 	{
-		return Optional.of(Txt.parse("Fertilizes a field with the radius %s", String.valueOf(getFertilizationRadius(lvl))));
+		return Optional.of("Fertilizes a field with the radius " + String.valueOf(getFertilizationRadius(lvl)));
 	}
 
 	private static double getFertilizationRadius(int lvl)
@@ -149,7 +195,7 @@ public class FertilizeField extends AbilityAbstract
 			// For all the latest added blocks, we look through
 			// the nearest ones to add to the three.
 			latest.forEach( (Block block) ->
-				add.addAll(BlockUtil.getSurroundingBlocksWith(block, FIELD_FACES)
+				add.addAll(BlockUtil.getSurroundingBlocks(block)
 							.stream()
 							// Of course it must be a field material
 							.filter(b -> FarmingSkill.getFertilizeFieldMaterials().contains(b.getType()))

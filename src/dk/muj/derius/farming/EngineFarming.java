@@ -4,21 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.bukkit.CropState;
 import org.bukkit.Material;
-import org.bukkit.NetherWartsState;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.material.CocoaPlant;
-import org.bukkit.material.CocoaPlant.CocoaPlantSize;
-import org.bukkit.material.Crops;
-import org.bukkit.material.NetherWarts;
 import org.bukkit.plugin.Plugin;
 
 import com.massivecraft.massivecore.EngineAbstract;
@@ -29,6 +22,7 @@ import dk.muj.derius.api.player.DPlayer;
 import dk.muj.derius.api.skill.Skill;
 import dk.muj.derius.api.util.AbilityUtil;
 import dk.muj.derius.api.util.SkillUtil;
+import dk.muj.derius.lib.BlockUtil;
 
 public class EngineFarming extends EngineAbstract
 {
@@ -83,7 +77,7 @@ public class EngineFarming extends EngineAbstract
 		if ( ! FarmingSkill.getExpGain().containsKey(material)) return;
 		
 		// Handle placement and growth state
-		if ( ! (DeriusAPI.isBlockPlacedByPlayer(block) && isGrowthStateCorrect(block.getState()))) return;
+		if ( ! (DeriusAPI.isBlockPlacedByPlayer(block) && BlockUtil.isGrowthStateFull(block.getState()))) return;
 		
 		// Add initial block
 		blocks.add(block);
@@ -133,39 +127,10 @@ public class EngineFarming extends EngineAbstract
 		// Tool preparation and ability activation
 		Optional<Material> optPrepared = dplayer.getPreparedTool();
 		
-		if (optPrepared.isPresent() && HOE_MATERIALS.contains(optPrepared.get()))
+		if (optPrepared.isPresent() && HOE_MATERIALS.contains(optPrepared.get()) && AbilityUtil.canPlayerActivateAbility(dplayer, FertilizeField.get(), VerboseLevel.ALWAYS))
 		{
 			AbilityUtil.activateAbility(dplayer, FertilizeField.get(), block, VerboseLevel.NORMAL);
 		}
-	}
-	
-	// -------------------------------------------- //
-	// PRIVATE
-	// -------------------------------------------- //
-	
-	@SuppressWarnings("deprecation")
-	private boolean isGrowthStateCorrect(BlockState state)
-	{
-		 switch (state.getType())
-		 {
-			// These are the special cases to check for
-			case CARROT:
-			case POTATO:
-				return state.getRawData() == CropState.RIPE.getData();
-				 
-			case CROPS:
-				return ((Crops) state.getData()).getState() == CropState.RIPE;
-				 
-			case NETHER_WARTS:
-				return ((NetherWarts) state.getData()).getState() == NetherWartsState.RIPE;
-
-			case COCOA:
-				return ((CocoaPlant) state.getData()).getSize() == CocoaPlantSize.LARGE;
-				 
-			// Normally, it is true. The rest gets taken care of by the block placement storage
-			default:
-				return true;
-		 }
 	}
 
 }
