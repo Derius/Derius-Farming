@@ -32,7 +32,6 @@ public class DeriusFarming extends MassivePlugin
 		
 		DeriusAPI.registerPreparableTools(EngineFarming.HOE_MATERIALS);
 		DeriusAPI.addBlockTypesToListenFor(FarmingSkill.getExpGain().keySet());
-		DeriusAPI.registerExpGain(FarmingExpGain.get());
 		
 		super.postEnable();
 	}

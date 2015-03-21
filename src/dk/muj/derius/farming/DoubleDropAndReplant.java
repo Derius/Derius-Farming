@@ -1,14 +1,11 @@
 package dk.muj.derius.farming;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import org.bukkit.CropState;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.inventory.ItemStack;
 
@@ -65,9 +62,6 @@ public class DoubleDropAndReplant extends AbilityAbstract
 		Material material = blockState.getType();
 		
 		if ( ! FarmingSkill.getExpGain().containsKey(material)) return null;
-			
-		// Check if it is a pumpkin or melon and make sure they don't abuse it.
-		if ( ! isBlockFruitSave(material, blockState)) return null;
 
 		// Should doubledrop occur?
 		if( ! SkillUtil.shouldDoubleDropOccur(dplayer.getLvl(getSkill()), 10)) return null;
@@ -99,48 +93,6 @@ public class DoubleDropAndReplant extends AbilityAbstract
 		double percentDrop = Math.min(100.0, (double) lvl / FarmingSkill.getDoubleDropLevelPerPercent());
 		double percentReplant = Math.min(100.0, (double) lvl / FarmingSkill.getReplantLevelPerPercent());
 		return Optional.of("<i>Chance to double drop is<h> " + String.valueOf(percentDrop) + "%" + "<i> and to replant <h>" + String.valueOf(percentReplant) + "%");
-	}
-	
-	// -------------------------------------------- //
-	// REDUCE ABUSE
-	// -------------------------------------------- //
-
-	// Only here for first time activation, afterwards the BlockMixin takes its place
-	private boolean isBlockFruitSave(Material material, BlockState blockState)
-	{
-		// Is it a Material we want to check for?
-		Material stemMaterial = null;
-		
-		if (material == Material.PUMPKIN)
-		{
-			stemMaterial = Material.PUMPKIN_STEM;
-		}
-		else if (material == Material.MELON)
-		{
-			stemMaterial = Material.MELON_STEM;
-		}
-		
-		// No? return true
-		if (stemMaterial == null) return true;
-		
-		// Check for the neighbors
-		List<Block> checkFor = new ArrayList<Block>();
-		Block stemBlock = blockState.getBlock();
-		
-		checkFor.add(stemBlock.getRelative(BlockFace.EAST));
-		checkFor.add(stemBlock.getRelative(BlockFace.NORTH));
-		checkFor.add(stemBlock.getRelative(BlockFace.WEST));
-		checkFor.add(stemBlock.getRelative(BlockFace.SOUTH));
-		
-		for (Block block: checkFor)
-		{
-			if (block.getType() == stemMaterial)
-			{
-				return true;
-			}
-		}
-		
-		return false;
 	}
 	
 	// -------------------------------------------- //

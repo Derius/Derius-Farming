@@ -12,8 +12,12 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.material.CocoaPlant;
 
+import com.massivecraft.massivecore.particleeffect.ParticleEffect;
+
 import dk.muj.derius.api.ability.AbilityAbstract;
 import dk.muj.derius.api.player.DPlayer;
+import dk.muj.derius.api.req.ReqCooldownIsExpired;
+import dk.muj.derius.api.req.ReqHasEnoughStamina;
 import dk.muj.derius.api.req.ReqIsAtleastLevel;
 import dk.muj.derius.api.skill.Skill;
 import dk.muj.derius.api.util.AbilityUtil;
@@ -35,8 +39,12 @@ public class FertilizeField extends AbilityAbstract
 		this.setDesc("Fertilizes a field");
 		
 		this.setType(AbilityType.ACTIVE);
+		this.setCooldownMillis(1000 * 5 * 60);
+		this.setStaminaUsage(50.0);
 		
 		this.addActivateRequirements(ReqIsAtleastLevel.get( () -> FarmingSkill.getFertilizeFieldMinLvl()));
+		this.addActivateRequirements(ReqCooldownIsExpired.get());
+		this.addActivateRequirements(ReqHasEnoughStamina.get());
 	}
 	
 	// -------------------------------------------- //
@@ -83,20 +91,23 @@ public class FertilizeField extends AbilityAbstract
 	@SuppressWarnings("deprecation")
 	private void applyGrowth(Block block, int level)
 	{
-		byte data = block.getData();
+		byte data = (byte) (block.getData() + 1);
 		
 		// If it is already fully grown, return.
-		if ( ! BlockUtil.isGrowthStateFull(block.getState())) return;
-		
+		if (BlockUtil.isGrowthStateFull(block.getState())) return;
+
 		// Do math to find out how much the field grows and limit it
+		level = Math.max(level - FarmingSkill.getFertilizeFieldMinLvl(), 0);
 		double steps = level / FarmingSkill.getFertilizeFieldGrowthStepsPerLevels();
 		byte additionalData = (byte) (steps * Math.random() * FarmingSkill.getFertilizeFieldGrowthAmountPerStep());
 		additionalData = (byte) Math.min(additionalData, FarmingSkill.getFertilizeFieldGrowthMax());
 		
 		// Limit number to fully grown and set 
 		data = (byte) Math.min(data + additionalData, getDataOfFullyGrown(block));
+		data = (byte) Math.max(data, 0);
 		block.setData(data);
 		
+		ParticleEffect.ENCHANTMENT_TABLE.display((float) 0.3, (float) 0.3, (float) 0.3, (float) 0.02, 30, block.getLocation(), 32);
 		return;
 	}
 	
@@ -157,6 +168,7 @@ public class FertilizeField extends AbilityAbstract
 
 	private static double getFertilizationRadius(int lvl)
 	{
+		lvl = Math.max(lvl - FarmingSkill.getFertilizeFieldMinLvl(), 0);
 		double baseRadius = FarmingSkill.getFertilizeFieldBaseRadius();
 		double steps = lvl / FarmingSkill.getFertilizeFieldRadiusStepPerLevels();
 		

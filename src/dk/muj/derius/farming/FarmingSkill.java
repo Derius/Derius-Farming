@@ -68,7 +68,7 @@ public class FarmingSkill extends SkillAbstract
 				2000, 3.0), new TypeToken<Map<Integer, Double>>(){});
 		
 		this.writeConfig(Const.JSON_REPLANT_MATERIALS, MUtil.list(
-				Material.WHEAT,
+				Material.CROPS,
 				Material.NETHER_WARTS,
 				Material.COCOA,
 				Material.CARROT,
@@ -76,7 +76,7 @@ public class FarmingSkill extends SkillAbstract
 				), new TypeToken<List<Material>>(){});
 		
 		this.writeConfig(Const.JSON_FERTILIZE_FIELD_MATERIALS, MUtil.list(
-				Material.WHEAT,
+				Material.CROPS,
 				Material.NETHER_WARTS,
 				Material.CARROT,
 				Material.COCOA,

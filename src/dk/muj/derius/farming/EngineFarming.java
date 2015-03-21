@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -76,9 +77,9 @@ public class EngineFarming extends EngineAbstract
 		// Is the block supposed to get exp and doubledrop?
 		if ( ! FarmingSkill.getExpGain().containsKey(material)) return;
 		
-		// Handle placement and growth state
-		if ( ! (DeriusAPI.isBlockPlacedByPlayer(block) && BlockUtil.isGrowthStateFull(block.getState()))) return;
-		
+		// Handle placement and growth state and minimise abuse
+		if (DeriusAPI.isBlockPlacedByPlayer(block) &! BlockUtil.isGrowthStateFull(block.getState()) &! isBlockFruitSave(material, block.getState())) return;
+
 		// Add initial block
 		blocks.add(block);
 		
@@ -97,17 +98,18 @@ public class EngineFarming extends EngineAbstract
 				if (DeriusAPI.isBlockPlacedByPlayer(upperBlock)) continue;
 				
 				blocks.add(upperBlock);
-				
-				// Give exp immediately
-				if ( ! SkillUtil.canPlayerLearnSkill(dplayer, skill, VerboseLevel.HIGHEST)) continue;
-				dplayer.addExp(skill, FarmingSkill.getExpGain().get(material).longValue());
 			}
 		}
 		
-		// Execute the ability for all blocks
+		// Execute the ability for all blocks and give exp
 		for (Block activitionBlock : blocks)
 		{
 			AbilityUtil.activateAbility(dplayer, DoubleDropAndReplant.get(), activitionBlock.getState(), VerboseLevel.NEVER);
+			
+			if (SkillUtil.canPlayerLearnSkill(dplayer, skill, VerboseLevel.HIGHEST))
+			{
+				dplayer.addExp(skill, FarmingSkill.getExpGain().get(material).doubleValue());
+			}
 		}
 		
 		return;
@@ -123,6 +125,7 @@ public class EngineFarming extends EngineAbstract
 		
 		// Is field block?
 		if ( ! FarmingSkill.getFertilizeFieldMaterials().contains(block.getType())) return;
+		if (BlockUtil.isGrowthStateFull(block.getState())) return;
 		
 		// Tool preparation and ability activation
 		Optional<Material> optPrepared = dplayer.getPreparedTool();
@@ -131,6 +134,47 @@ public class EngineFarming extends EngineAbstract
 		{
 			AbilityUtil.activateAbility(dplayer, FertilizeField.get(), block, VerboseLevel.NORMAL);
 		}
+	}
+	
+	// -------------------------------------------- //
+	// REDUCE ABUSE
+	// -------------------------------------------- //
+
+	// Only here for first time activation, afterwards the BlockMixin takes its place
+	private boolean isBlockFruitSave(Material material, BlockState blockState)
+	{
+		// Is it a Material we want to check for?
+		if ( ! (material == Material.PUMPKIN || material == Material.MELON_BLOCK)) return true;
+		
+		Material stemMaterial = null;
+		
+		if (material == Material.PUMPKIN)
+		{
+			stemMaterial = Material.PUMPKIN_STEM;
+		}
+		else if (material == Material.MELON_BLOCK)
+		{
+			stemMaterial = Material.MELON_STEM;
+		}
+		
+		// Check for the neighbors
+		List<Block> checkFor = new ArrayList<Block>();
+		Block stemBlock = blockState.getBlock();
+		
+		checkFor.add(stemBlock.getRelative(BlockFace.EAST));
+		checkFor.add(stemBlock.getRelative(BlockFace.NORTH));
+		checkFor.add(stemBlock.getRelative(BlockFace.WEST));
+		checkFor.add(stemBlock.getRelative(BlockFace.SOUTH));
+		
+		for (Block block: checkFor)
+		{
+			if (block.getType() == stemMaterial)
+			{
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 }
