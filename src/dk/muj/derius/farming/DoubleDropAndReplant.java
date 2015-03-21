@@ -14,7 +14,7 @@ import dk.muj.derius.api.player.DPlayer;
 import dk.muj.derius.api.skill.Skill;
 import dk.muj.derius.api.util.SkillUtil;
 
-public class DoubleDropAndReplant extends AbilityAbstract
+public class DoubleDropAndReplant extends AbilityAbstract<BlockState>
 {
 	private static DoubleDropAndReplant i = new DoubleDropAndReplant();
 	public static DoubleDropAndReplant get() { return i; }
@@ -54,10 +54,9 @@ public class DoubleDropAndReplant extends AbilityAbstract
 
 	
 	@Override
-	public Object onActivate(DPlayer dplayer, Object other)
+	public Object onActivate(DPlayer dplayer, BlockState blockState)
 	{
-		if( ! (other instanceof BlockState)) return null;
-		BlockState blockState = (BlockState) other;
+		if(blockState == null) return null;
 		
 		Material material = blockState.getType();
 		
@@ -73,11 +72,10 @@ public class DoubleDropAndReplant extends AbilityAbstract
 		for(ItemStack is: blockState.getBlock().getDrops(inHand))
 		{
 			blockState.getWorld().dropItem(loc, is);
-			replantSeed(material, dplayer, blockState);
+			this.replantSeed(material, dplayer, blockState);
 		}
 	
 		return null;
-		
 	}
 	
 	@Override

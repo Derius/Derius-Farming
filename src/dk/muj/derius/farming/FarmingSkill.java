@@ -83,6 +83,12 @@ public class FarmingSkill extends SkillAbstract
 				Material.POTATO
 				), new TypeToken<List<Material>>(){});
 		
+		this.writeConfig(Const.JSON_FERTILIZE_FIELD_SOIL_MATERIALS, MUtil.list(
+				Material.SOIL,
+				Material.LOG,
+				Material.SOUL_SAND
+				), new TypeToken<List<Material>>(){});
+		
 	}
 	
 	// -------------------------------------------- //
@@ -136,6 +142,11 @@ public class FarmingSkill extends SkillAbstract
 	public static List<Material> getFertilizeFieldMaterials()
 	{
 		return get().readConfig(Const.JSON_FERTILIZE_FIELD_MATERIALS, new TypeToken<List<Material>>(){});
+	}
+	
+	public static List<Material> getFertilizeFieldSoilMaterials()
+	{
+		return get().readConfig(Const.JSON_FERTILIZE_FIELD_SOIL_MATERIALS, new TypeToken<List<Material>>(){});
 	}
 
 	public static double getFertilizeFieldBaseRadius()

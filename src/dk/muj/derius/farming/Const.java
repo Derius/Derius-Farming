@@ -21,6 +21,7 @@ public class Const
 	public static final String JSON_FERTILIZE_FIELD_GROWTH_STEPS_PER_LEVEL = "FertilizeField growth steps per level";
 	public static final String JSON_FERTILIZE_FIELD_GROWTH_AMOUNT_PER_STEPS = "FertilizeField growth amount per steps";
 	public static final String JSON_FERTILIZE_FIELD_GROWTH_MAX = "FertilizeField growth max";
+	public static final String JSON_FERTILIZE_FIELD_SOIL_MATERIALS = "FertilizeField soil materials";
 	
 	public static final String JSON_REPLANT_MATERIALS = "Replant Materials";
 	public static final String JSON_DOUBLE_DROP_LEVEL_PER_PERCENT = "Doubledrop level per percent";
