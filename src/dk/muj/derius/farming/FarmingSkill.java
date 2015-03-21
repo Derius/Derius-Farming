@@ -35,7 +35,7 @@ public class FarmingSkill extends SkillAbstract
 		// Config
 		this.writeConfig(Const.JSON_FERTILIZE_FIELD_MIN_LVL, 500);
 		this.writeConfig(Const.JSON_FERTILIZE_FIELD_RADIUS_STEP_PER_LEVELS, 25);
-		this.writeConfig(Const.JSON_FERTILIZE_FIELD_BASE_RADIUS, 2.0);
+		this.writeConfig(Const.JSON_FERTILIZE_FIELD_BASE_RADIUS, 2.5);
 		this.writeConfig(Const.JSON_FERTILIZE_FIELD_RADIUS_PER_STEP, 1.5);
 		this.writeConfig(Const.JSON_FERTILIZE_FIELD_GROWTH_STEPS_PER_LEVEL, 1.5);
 		this.writeConfig(Const.JSON_FERTILIZE_FIELD_GROWTH_AMOUNT_PER_STEPS, 1.5);
@@ -67,7 +67,7 @@ public class FarmingSkill extends SkillAbstract
 				1000, 1.5,
 				2000, 3.0), new TypeToken<Map<Integer, Double>>(){});
 		
-		this.writeConfig(Const.JSON_REPLANT_MATERIALS, MUtil.map(
+		this.writeConfig(Const.JSON_REPLANT_MATERIALS, MUtil.list(
 				Material.WHEAT,
 				Material.NETHER_WARTS,
 				Material.COCOA,
@@ -75,10 +75,11 @@ public class FarmingSkill extends SkillAbstract
 				Material.POTATO
 				), new TypeToken<List<Material>>(){});
 		
-		this.writeConfig(Const.JSON_FERTILIZE_FIELD_MATERIALS, MUtil.map(
+		this.writeConfig(Const.JSON_FERTILIZE_FIELD_MATERIALS, MUtil.list(
 				Material.WHEAT,
 				Material.NETHER_WARTS,
 				Material.CARROT,
+				Material.COCOA,
 				Material.POTATO
 				), new TypeToken<List<Material>>(){});
 		

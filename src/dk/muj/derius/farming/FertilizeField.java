@@ -152,7 +152,7 @@ public class FertilizeField extends AbilityAbstract
 	@Override
 	public Optional<String> getLvlDescriptionMsg(int lvl)
 	{
-		return Optional.of("Fertilizes a field with the radius " + String.valueOf(getFertilizationRadius(lvl)));
+		return Optional.of("Fertilizes a field with the radius <h>" + String.valueOf(getFertilizationRadius(lvl)));
 	}
 
 	private static double getFertilizationRadius(int lvl)

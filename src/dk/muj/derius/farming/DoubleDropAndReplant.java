@@ -28,7 +28,7 @@ public class DoubleDropAndReplant extends AbilityAbstract
 	
 	public DoubleDropAndReplant()
 	{
-		this.setName("Doubledrop and replace");
+		this.setName("Doubledrop And Replant");
 		
 		this.setDesc("Gives doubledrop and sometimes replants the crop");
 		
@@ -98,7 +98,7 @@ public class DoubleDropAndReplant extends AbilityAbstract
 	{
 		double percentDrop = Math.min(100.0, (double) lvl / FarmingSkill.getDoubleDropLevelPerPercent());
 		double percentReplant = Math.min(100.0, (double) lvl / FarmingSkill.getReplantLevelPerPercent());
-		return Optional.of("<i>Chance to double drop is " + String.valueOf(percentDrop) + "%" + "and replant <h>" + String.valueOf(percentReplant) );
+		return Optional.of("<i>Chance to double drop is<h> " + String.valueOf(percentDrop) + "%" + "<i> and to replant <h>" + String.valueOf(percentReplant) + "%");
 	}
 	
 	// -------------------------------------------- //
