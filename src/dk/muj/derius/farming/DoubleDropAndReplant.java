@@ -56,7 +56,7 @@ public class DoubleDropAndReplant extends AbilityAbstract<BlockState>
 	@Override
 	public Object onActivate(DPlayer dplayer, BlockState blockState)
 	{
-		if(blockState == null) return null;
+		if (blockState == null) return null;
 		
 		Material material = blockState.getType();
 		
@@ -69,7 +69,7 @@ public class DoubleDropAndReplant extends AbilityAbstract<BlockState>
 		Location loc = blockState.getLocation();
 		
 		// Apply doubledrop and replant if possible
-		for(ItemStack is: blockState.getBlock().getDrops(inHand))
+		for (ItemStack is : blockState.getBlock().getDrops(inHand))
 		{
 			blockState.getWorld().dropItem(loc, is);
 			this.replantSeed(material, dplayer, blockState);
