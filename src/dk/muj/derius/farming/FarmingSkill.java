@@ -33,11 +33,29 @@ public class FarmingSkill extends SkillAbstract
 		this.setIcon(Material.WHEAT);
 		
 		// Config
+		this.writeConfig(Const.JSON_EATING_HEALTHY_MIN_LVL, 500);
+		this.writeConfig(Const.JSON_EATING_HEALTHY_BASE_MULTIPLIER, 0.8);
+		this.writeConfig(Const.JSON_EATING_HEALTHY_AMOUNT_PER_STEP, 0.1);
+		this.writeConfig(Const.JSON_EATING_HEALTHY_STEP_PER_LEVELS, 50);
+		this.writeConfig(Const.JSON_EATING_HEALTHY_MATERIALS, MUtil.list(
+				Material.APPLE,
+				Material.BAKED_POTATO,
+				Material.BREAD,
+				Material.CAKE,
+				Material.CARROT,
+				Material.COOKIE,
+				Material.GOLDEN_CARROT,
+				Material.MELON,
+				Material.MILK_BUCKET,
+				Material.MUSHROOM_SOUP,
+				Material.PUMPKIN_PIE
+				), new TypeToken<List<Material>>(){});
+		
 		this.writeConfig(Const.JSON_FERTILIZE_FIELD_MIN_LVL, 500);
 		this.writeConfig(Const.JSON_FERTILIZE_FIELD_RADIUS_STEP_PER_LEVELS, 25);
 		this.writeConfig(Const.JSON_FERTILIZE_FIELD_BASE_RADIUS, 2.5);
 		this.writeConfig(Const.JSON_FERTILIZE_FIELD_RADIUS_PER_STEP, 1.5);
-		this.writeConfig(Const.JSON_FERTILIZE_FIELD_GROWTH_STEPS_PER_LEVEL, 1.5);
+		this.writeConfig(Const.JSON_FERTILIZE_FIELD_GROWTH_STEP_PER_LEVELS, 1.5);
 		this.writeConfig(Const.JSON_FERTILIZE_FIELD_GROWTH_AMOUNT_PER_STEPS, 1.5);
 		this.writeConfig(Const.JSON_FERTILIZE_FIELD_GROWTH_MAX, 1.5);
 		
@@ -167,7 +185,7 @@ public class FarmingSkill extends SkillAbstract
 	//  -- Field Growth
 	public static double getFertilizeFieldGrowthStepsPerLevels()
 	{
-		return get().readConfig(Const.JSON_FERTILIZE_FIELD_GROWTH_STEPS_PER_LEVEL, Double.class);
+		return get().readConfig(Const.JSON_FERTILIZE_FIELD_GROWTH_STEP_PER_LEVELS, Double.class);
 	}
 	
 	public static double getFertilizeFieldGrowthAmountPerStep()
@@ -185,5 +203,30 @@ public class FarmingSkill extends SkillAbstract
 	{
 		return get().readConfig(Const.JSON_CAREFUL_HARVESTING, new TypeToken<Map<Integer, Double>>(){});
 	}
+	
+	// EatingHealthy
+	public static int getEatingHealthyMinLevel()
+	{
+		return get().readConfig(Const.JSON_EATING_HEALTHY_MIN_LVL, int.class);
+	}
+	
+	public static double getEatingHealthyBaseMultiplier()
+	{
+		return get().readConfig(Const.JSON_EATING_HEALTHY_BASE_MULTIPLIER, Double.class);
+	}
 
+	public static int getEatingHealthyAmountPerStep()
+	{
+		return get().readConfig(Const.JSON_EATING_HEALTHY_AMOUNT_PER_STEP, int.class);
+	}
+	
+	public static double getEatingHealthyStepPerLevels()
+	{
+		return get().readConfig(Const.JSON_EATING_HEALTHY_STEP_PER_LEVELS, Double.class);
+	}
+	
+	public static List<Material> getEatingHeatlhyFoods()
+	{
+		return get().readConfig(Const.JSON_EATING_HEALTHY_STEP_PER_LEVELS, new TypeToken<List<Material>>(){});
+	}
 }

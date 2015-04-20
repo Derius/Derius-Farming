@@ -16,7 +16,7 @@ public class Const
 	public static final String JSON_FERTILIZE_FIELD_RADIUS_STEP_PER_LEVELS = "FertilizeField radius step per levels";
 	public static final String JSON_FERTILIZE_FIELD_BASE_RADIUS = "FertilizeField base radius";
 	public static final String JSON_FERTILIZE_FIELD_RADIUS_PER_STEP = "FertilizeField radius per step";
-	public static final String JSON_FERTILIZE_FIELD_GROWTH_STEPS_PER_LEVEL = "FertilizeField growth steps per level";
+	public static final String JSON_FERTILIZE_FIELD_GROWTH_STEP_PER_LEVELS = "FertilizeField growth steps per level";
 	public static final String JSON_FERTILIZE_FIELD_GROWTH_AMOUNT_PER_STEPS = "FertilizeField growth amount per steps";
 	public static final String JSON_FERTILIZE_FIELD_GROWTH_MAX = "FertilizeField growth max";
 	public static final String JSON_FERTILIZE_FIELD_SOIL_MATERIALS = "FertilizeField soil materials";
@@ -24,5 +24,11 @@ public class Const
 	public static final String JSON_REPLANT_MATERIALS = "Replant Materials";
 	public static final String JSON_DOUBLE_DROP_LEVEL_PER_PERCENT = "Doubledrop level per percent";
 	public static final String JSON_REPLANT_LEVEL_PER_PERCENT = "Replant level per percent";
+	
+	public static final String JSON_EATING_HEALTHY_MIN_LVL = "Eating Healthy minimum level";
+	public static final String JSON_EATING_HEALTHY_BASE_MULTIPLIER = "Eating Healthy base multiplier";
+	public static final String JSON_EATING_HEALTHY_AMOUNT_PER_STEP = "Eating Healthy amount per step";
+	public static final String JSON_EATING_HEALTHY_STEP_PER_LEVELS = "Eating Healthy steps per level";
+	public static final String JSON_EATING_HEALTHY_MATERIALS = "Eating Healthy materials";
 	
 }

@@ -13,6 +13,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 import com.massivecraft.massivecore.EngineAbstract;
@@ -134,6 +136,25 @@ public class EngineFarming extends EngineAbstract
 		{
 			AbilityUtil.activateAbility(dplayer, FertilizeField.get(), block, VerboseLevel.NORMAL);
 		}
+		
+		return;
+	}
+	
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	public void onFoodEat(PlayerItemConsumeEvent event)
+	{
+		// Fields
+		Player player = event.getPlayer();
+		DPlayer dplayer = DeriusAPI.getDPlayer(player);
+		ItemStack item = event.getItem();
+		Material material = item.getType();
+		
+		if ( ! FarmingSkill.getEatingHeatlhyFoods().contains(material)) return;
+		int restored = getFoodRestoredFrom(material);
+		
+		AbilityUtil.activateAbility(dplayer, EatingHealthy.get(), restored, VerboseLevel.NORMAL);
+		
+		return;
 	}
 	
 	// -------------------------------------------- //
@@ -175,6 +196,36 @@ public class EngineFarming extends EngineAbstract
 		}
 		
 		return false;
+	}
+	
+	private int getFoodRestoredFrom(Material material)
+	{
+		switch (material)
+		{
+			case APPLE:
+				return 4;
+			case BAKED_POTATO:
+				return 5;
+			case BREAD:
+				return 5;
+			case CAKE:
+				return 2;
+			case CARROT:
+				return 3;
+			case COOKIE:
+				return 2;
+			case GOLDEN_CARROT:
+				return 6;
+			case MELON:
+				return 2;
+			case MUSHROOM_SOUP:
+				return 6;
+			case PUMPKIN_PIE:
+				return 8;
+				
+			default:
+				return 0;
+		}
 	}
 
 }
